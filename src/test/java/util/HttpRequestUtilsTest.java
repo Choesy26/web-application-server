@@ -3,6 +3,9 @@ package util;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.junit.Test;
@@ -10,6 +13,21 @@ import org.junit.Test;
 import util.HttpRequestUtils.Pair;
 
 public class HttpRequestUtilsTest {
+
+    @Test
+    public void headerRequest() throws IOException {
+
+        String httpRequest = "GET /path/resource HTTP/1.1\n" +
+                "Host: localhost\n" +
+                "Accept: */*\n" +
+                "\n";
+
+        InputStream inputStream = new ByteArrayInputStream(httpRequest.getBytes());
+        String url = HttpRequestUtils.headerRequest(inputStream);
+
+        assertEquals("/path/resource", url);
+    }
+
     @Test
     public void parseQueryString() {
         String queryString = "userId=javajigi";
