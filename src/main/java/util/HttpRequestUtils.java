@@ -44,8 +44,12 @@ public class HttpRequestUtils {
     public static void signUpRequest(String url) {
         String params = parseUrl(url);
         Map<String, String> map = parseQueryString(params);
-        DataBase.addUser(new User(map.get("userId"), map.get("password"),
-                map.get("name"), map.get("email")));
+        User user = new User(
+            map.get("userId"),
+            map.get("password"),
+            map.get("name"),
+            map.get("email")
+        );
     }
 
     /**
