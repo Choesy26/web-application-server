@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
+import db.DataBase;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -24,10 +25,17 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             DataOutputStream dos = new DataOutputStream(out);
+            String url = HttpRequestUtils.headerRequest(in);
 
-            byte[] body = Files.readAllBytes(new File("./webapp" + HttpRequestUtils.headerRequest(in)).toPath());
+            if (url.startsWith("/user/create")) {
+                HttpRequestUtils.signUpRequest(url);
+            }
+
+            byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
             response200Header(dos, body.length);
             responseBody(dos, body);
+
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }

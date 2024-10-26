@@ -1,5 +1,7 @@
 package util;
 
+import model.User;
+import db.DataBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,14 +18,34 @@ public class HttpRequestUtils {
     public static String headerRequest(InputStream in) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line = reader.readLine();
-        String url = line.split(" ")[1];
 
-        while (!"".equals(line)) {
+        if (line == null) { return null; }
+
+        String url = line.split(" ")[1];
+        System.out.println(line);
+
+        //if (!url.endsWith(".html")) {return null;}
+
+        /*while (!"".equals(line)) {
             if (line == null) { return null; }
             System.out.println(line);
             line = reader.readLine();
-        }
+        }*/
         return url;
+    }
+
+    public static String parseUrl(String url) {
+        int index = url.indexOf("?");
+        String requestPath = url.substring(0, index);
+        return url.substring(index+1);
+
+    }
+
+    public static void signUpRequest(String url) {
+        String params = parseUrl(url);
+        Map<String, String> map = parseQueryString(params);
+        DataBase.addUser(new User(map.get("userId"), map.get("password"),
+                map.get("name"), map.get("email")));
     }
 
     /**
