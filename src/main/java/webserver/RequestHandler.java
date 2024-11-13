@@ -36,6 +36,10 @@ public class RequestHandler extends Thread {
                 int contentLength = getContentLength(br);
                 String requestBody = IOUtils.readData(br, contentLength);
                 HttpRequestUtils.signUpRequest(requestBody);
+
+                dos.writeBytes("HTTP/1.1 302 Found \r\n");
+                dos.writeBytes("Location: /index.html \r\n");
+                dos.writeBytes("\r\n");
             }
             if ("GET".equals(method)) {
                 byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
